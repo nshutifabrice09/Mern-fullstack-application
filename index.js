@@ -7,6 +7,11 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser'; 
 
 
+//Data imports
+import User from "./models/User.js";
+import { dataUser } from "./data/index.js";
+
+
 /* Importing routes */
 
 import clientRoutes from "./routes/client.js";
@@ -16,7 +21,7 @@ import salesRoutes from "./routes/sales.js";
 
 /* Configurations */
 
-dotenv.confif();
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(helmet());
@@ -37,8 +42,8 @@ app.use("/sales", salesRoutes);
 const PORT = process.env.PORT || 9000;
 mongoose
     .connect(process.env.MONGO_URL, {
-        userNewUrlParser: true,
-        userUnifiedTopology: true,
     }).then(() => {
-        app.listen(PORT, () => console.log('Server Port: ${PORT}'));
-    }).catch((error ) => console.log('${error} did not connect'));
+        app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+        User.insertMany(dataUser);
+    })
+    .catch((error ) => console.log(`${error} did not connect`));
