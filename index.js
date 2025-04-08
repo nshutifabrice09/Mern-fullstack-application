@@ -9,7 +9,9 @@ import bodyParser from 'body-parser';
 
 //Data imports
 import User from "./models/User.js";
-import { dataUser } from "./data/index.js";
+import { dataUser, dataProduct, dataProductStat } from "./data/index.js";
+import Product from "./models/Product.js";
+import ProductStat from './models/ProductStat.js';
 
 
 /* Importing routes */
@@ -39,11 +41,14 @@ app.use("/management", managementRoutes);
 app.use("/sales", salesRoutes);
 
 /* Mongoose setups*/
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 3000;
 mongoose
     .connect(process.env.MONGO_URL, {
     }).then(() => {
         app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+        //run this once, once the tables are created, comment it out, nizreko uri kubyumva
+        Product.insertMany(dataProduct);
+        ProductStat.insertMany(dataProductStat);
         User.insertMany(dataUser);
     })
     .catch((error ) => console.log(`${error} did not connect`));
